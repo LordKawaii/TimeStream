@@ -5,7 +5,7 @@ using System.Collections;
 public class PersonController : MonoBehaviour {
     public Person person;
     public GameObject startNode;
-    public float speed;
+    public float speed = 2;
 
     protected Transform nextNode;
     protected Transform previousNode;

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerController : PersonController {
+public class PawnController : PersonController {
     public bool isBrave = false;
     public bool isCurious = false;
 
@@ -84,14 +84,12 @@ public class PlayerController : PersonController {
                                 break;
                             }
 
-                        //if no known nodetype is found return to last node
-                        default:
-                            {
-                                ReturnToLastNode();
-                                break;
-                            }
                     }//End Switch statement 
                 }//End Foreach loop
+
+                //if no known nodetype is found return to last node
+                if (!foundNode)
+                    ReturnToLastNode();
             }
         }
     }//End MakeDecision
