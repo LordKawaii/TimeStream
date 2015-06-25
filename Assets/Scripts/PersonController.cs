@@ -41,24 +41,37 @@ public class PersonController : MonoBehaviour {
         GameObject otherObject = other.gameObject;
         if (transform.position == nextNode.position && otherObject.tag == objTags.decisionNode)
         {
-            foreach (Transform nTransform in nextNodeInfo.connectedNodes)
-            {
-                NodeType nodeType;
-                nodeType = nTransform.gameObject.GetComponent<NodeInfo>().nodeType;
+            if (nextNodeInfo.connectedNodes.Count > 0)
+            { 
+                foreach (Transform nTransform in nextNodeInfo.connectedNodes)
+                {
+                    //if the element in the array is null return to last node.
+                    if (nTransform == null)
+                    { 
+                        ReturnToLastNode(); 
+                        break;
+                    }
 
-                //Only set waypoint if it is not the current one
-                if (nodeType == NodeType.Waypoint && nTransform != nextNode.transform)
-                {
-                    swapNodes(nTransform);
-                }
-                else
-                //Go back the way you came
-                {
-                    Transform tempNode;
-                    tempNode = previousNode;
-                    swapNodes(tempNode);
+
+                    NodeType nodeType;
+                    nodeType = nTransform.gameObject.GetComponent<NodeInfo>().nodeType;
+
+                    //Only set waypoint if it is not the current one
+                    if (nodeType == NodeType.Waypoint && nTransform != nextNode.transform)
+                    {
+                        SwapNodes(nTransform);
+                    }
+                    else
+                    //Go back the way you came
+                    {
+                        ReturnToLastNode();
+                    }
                 }
             }
+            else
+                ReturnToLastNode();
+            
+            
             setNodeInfo(); //reset the nodeInfo objects
         }
 
@@ -72,10 +85,17 @@ public class PersonController : MonoBehaviour {
     }
 
     //Swaps the previous node with the current one and sets next node the the new next node
-    protected void swapNodes(Transform newNextNode)
+    protected void SwapNodes(Transform newNextNode)
     {
         previousNode = nextNode;
         nextNode = newNextNode;
+    }
+
+    protected void ReturnToLastNode()
+    {
+        Transform tempNode;
+        tempNode = previousNode;
+        SwapNodes(tempNode);
     }
     
     protected void MoveToNextNode()

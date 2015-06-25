@@ -5,7 +5,20 @@ public class PlayerController : PersonController {
     public bool isBrave = false;
     public bool isCurious = false;
 
-    void OnTriggerEnter2d(Collision2D other)
+    private ObjectTags objTags = new ObjectTags();
+
+    void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.tag == objTags.decisionNode)
+            MakeDecision();
+
+        if (other.tag == objTags.intervention) 
+            ChangeModivation(other.gameObject.GetComponent<InterventionController>().type);
+
+    }
+
+    
+    void MakeDecision()
     {
         if (transform.position == nextNode.position)
         {
@@ -14,11 +27,20 @@ public class PlayerController : PersonController {
                 bool foundNode = false; //Used to brake out of the ForEach loop after the correct node is found.
                 foreach (Transform nTransform in nextNodeInfo.connectedNodes)
                 {
-                    NodeType nodeType;
-                    nodeType = nTransform.GetComponent<NodeInfo>().nodeType;
 
                     if (foundNode)
                         break;
+
+                    //if the element in the array is null return to last node.
+                    if (nTransform == null)
+                    {
+                        ReturnToLastNode();
+                        break;
+                    }
+
+
+                    NodeType nodeType;
+                    nodeType = nTransform.GetComponent<NodeInfo>().nodeType;
 
                     switch (nodeType)
                     {
@@ -26,7 +48,7 @@ public class PlayerController : PersonController {
                             {
                                 if (isCurious)
                                 {
-                                    swapNodes(nTransform);
+                                    SwapNodes(nTransform);
                                     foundNode = true;
                                 }
                                 break;
@@ -36,7 +58,7 @@ public class PlayerController : PersonController {
                             {
                                 if (!isCurious)
                                 {
-                                    swapNodes(nTransform);
+                                    SwapNodes(nTransform);
                                     foundNode = true;
                                 }
                                 break;
@@ -46,7 +68,7 @@ public class PlayerController : PersonController {
                             {
                                 if (isBrave)
                                 {
-                                    swapNodes(nTransform);
+                                    SwapNodes(nTransform);
                                     foundNode = true;
                                 }
                                 break;
@@ -56,24 +78,50 @@ public class PlayerController : PersonController {
                             {
                                 if (!isBrave)
                                 {
-                                    swapNodes(nTransform);
+                                    SwapNodes(nTransform);
                                     foundNode = true;
                                 }
                                 break;
                             }
 
+                        //if no known nodetype is found return to last node
                         default:
                             {
-                                Transform tempNode;
-                                tempNode = previousNode;
-                                swapNodes(tempNode);
+                                ReturnToLastNode();
                                 break;
                             }
                     }//End Switch statement 
                 }//End Foreach loop
             }
-        }//End OnTriggerEnter2d
-    }
+        }
+    }//End MakeDecision
 
+
+    void ChangeModivation(InterventionType type)
+    { 
+        switch (type)
+        {
+            case InterventionType.InfoCryptic:
+                {
+                    isCurious = true;
+                    break;
+                }
+            case InterventionType.InfoDirect:
+                {
+                    isCurious = false;
+                    break;
+                }
+            case InterventionType.Weapon:
+                {
+                    isBrave = true;
+                    break;
+                }
+            case InterventionType.Trap:
+                {
+                    isBrave = false;
+                    break;
+                }
+        }
+    }
 
 }

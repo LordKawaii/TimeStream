@@ -7,4 +7,5 @@ public class ObjectTags
     public string gameController = "GameController";
     public string decisionNode = "DecisionNode";
     public string person = "Person";
+    public string intervention = "Intervention";
 }

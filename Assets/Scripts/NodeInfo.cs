@@ -16,7 +16,37 @@ public class NodeInfo : MonoBehaviour {
             foreach (Transform nTransform in connectedNodes)
             {
                 if (nTransform != null)
-                    Gizmos.DrawLine(transform.position, nTransform.position);
+                {
+                    NodeType connectecNodeType = nTransform.gameObject.GetComponent<NodeInfo>().nodeType;
+                    switch (connectecNodeType)
+                    { 
+                        case NodeType.Brave:
+                            {
+                                Gizmos.color = Color.red;
+                                Gizmos.DrawLine(transform.position, nTransform.position);
+                                break;
+                            }
+                        case NodeType.Timid:
+                            {
+                                Gizmos.color = Color.yellow;
+                                Gizmos.DrawLine(transform.position, nTransform.position);
+                                break;
+                            }
+                        case NodeType.Curious:
+                            {
+                                Gizmos.color = Color.cyan;
+                                Gizmos.DrawLine(transform.position, nTransform.position);
+                                break;
+                            }
+                        case NodeType.Direct:
+                            {
+                                Gizmos.color = Color.black;
+                                Gizmos.DrawLine(transform.position, nTransform.position);
+                                break;
+                            }
+                    }
+                    
+                }
             }
     }
 }

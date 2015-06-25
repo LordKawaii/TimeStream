@@ -17,7 +17,7 @@ public enum Person
     None
 };
 
-public enum EventType
+public enum InterventionType
 {
     InfoCryptic,
     InfoDirect,
